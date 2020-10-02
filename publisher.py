@@ -85,7 +85,11 @@ class MQTTService(ClientService):
 
 if __name__ == "__main__":
     import sys
+    import generate_tests
 
+    tests = generate_tests.GenerateTests("./test_case/connect/")
+    buildedTests = tests.buildTest(testNumber=5, writeToFiles=False)
+    print(buildedTests)
     log = Logger()
     startLogging()
 
@@ -94,7 +98,7 @@ if __name__ == "__main__":
 
     factory = MQTTFactory(profile=MQTTFactory.PUBLISHER)
     myend = clientFromString(reactor, endpoint)
-    print(myend)
+    #print(myend)
     serv = MQTTService(myend, factory)
     serv.startService()
     reactor.run()

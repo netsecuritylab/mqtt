@@ -7,9 +7,12 @@ from twisted.internet.endpoints import clientFromString
 from twisted.logger import (Logger, LogLevel, globalLogBeginner, textFileLogObserver, FilteringLogObserver, LogLevelFilterPredicate)
 
 from mqtt.client.factory import MQTTFactory
+import pyradamsa
+import random
 
 endpoint = "tcp:localhost:1883"
 logLevelFilterPredicate = LogLevelFilterPredicate(defaultLogLevel=LogLevel.debug)
+radamsa = pyradamsa.Radamsa()
 
 def startLogging(console=True, filepath=None):
     
@@ -31,9 +34,10 @@ def setLogLevel(namespace=None, levelStr='info'):
 
 class MQTTService(ClientService):
 
-    def __init__(self, endpoint, factory):
+    def __init__(self, endpoint, factory, id):
         self.endpoint = endpoint
         ClientService.__init__(self, endpoint, factory, retryPolicy=backoffPolicy())
+        self.id = id
 
 
     def startService(self):
@@ -49,10 +53,10 @@ class MQTTService(ClientService):
         self.protocol.onDisconnection = self.onDisconnection
         self.protocol.setWindowSize(1)
         self.task = task.LoopingCall(self.publish)
-        self.task.start(5.0)
+        self.task.start(10)
 
         try:
-            yield self.protocol.connect("myClientId", keepalive=60)
+            yield self.protocol.connect("myClientId" + str(self.id), keepalive=0)
         except Exception as e:
             log.error(("Connecting to {} raised {}".format(self.endpoint, str(e))))
         else:
@@ -74,7 +78,9 @@ class MQTTService(ClientService):
 
         log.debug("Publishing")
 
-        d1 = self.protocol.publish(topic="test/publishtest", qos=0, message="hello")
+        fuzzed_data = radamsa.fuzz(bytes("hello", "utf-8"))
+        #print(fuzzed_data)
+        d1 = self.protocol.publish(topic="test/publishtest", qos=2, message=str(fuzzed_data))
         d1.addErrback(_logFailure)
 
         dlist = DeferredList([d1], consumeErrors=True)
@@ -87,9 +93,9 @@ if __name__ == "__main__":
     import sys
     import generate_tests
 
-    tests = generate_tests.GenerateTests("./test_case/connect/")
-    buildedTests = tests.buildTest(testNumber=5, writeToFiles=False)
-    print(buildedTests)
+    #tests = generate_tests.GenerateTests("./test_case/connect/")
+    #buildedTests = tests.buildTest(testNumber=5, writeToFiles=False)
+    #print(buildedTests)
     log = Logger()
     startLogging()
 
@@ -98,7 +104,12 @@ if __name__ == "__main__":
 
     factory = MQTTFactory(profile=MQTTFactory.PUBLISHER)
     myend = clientFromString(reactor, endpoint)
-    #print(myend)
-    serv = MQTTService(myend, factory)
-    serv.startService()
+    services = []
+    n = 100
+    for i in range(0, 1024):
+        serv = MQTTService(myend, factory, i)
+        services.append(serv)
+
+    for i in range(0, 1024):
+        services[i].startService()
     reactor.run()

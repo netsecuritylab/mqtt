@@ -7,7 +7,6 @@ class MQTTClient(MQTTProtocol):
 
         self.clientId = clientId if clientId is not None else "client_" + str(random.randint(0, 2000))
         self.keepalive = keepalive if keepalive is not None else 60
-
         self.willQoS = willQoS
         self.willTopic = willTopic
         self.willMessage = willMessage

@@ -3,7 +3,7 @@ from twisted.internet.protocol import ReconnectingClientFactory
 from twisted.internet.task import LoopingCall
 
 from mqttprotocol import MQTTProtocol
-from clientprotocol import MQTTClient
+from client import MQTTClient
 
 
 class MQTTListenerFactory(ReconnectingClientFactory):
@@ -30,5 +30,4 @@ class MQTTListenerFactory(ReconnectingClientFactory):
 if __name__ == "__main__":
     mqttFactory = MQTTListenerFactory()
     reactor.connectTCP("192.168.1.24", 1883, mqttFactory)
-
     reactor.run()

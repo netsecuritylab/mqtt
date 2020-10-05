@@ -1,10 +1,29 @@
 from twisted.internet.protocol import Protocol
 
-
 class MQTTProtocol(Protocol):
 
-    buffer = bytearray()
+    """buffer = bytearray()
     availablePackets = {
+            0x00: "null",
+            0x01: "connect",
+            0x02: "connack",
+            0x03: "publish",
+            0x04: "puback",
+            0x05: "pubrec",
+            0x06: "pubrel",
+            0x07: "pubcomp",
+            0x08: "subscribe",
+            0x09: "suback",
+            0x0A: "unsubscribe",
+            0x0B: "unsuback",
+            0x0C: "pingreq",
+            0x0D: "pingresp",
+            0x0E: "disconnect"
+        }"""
+
+    def __init__(self):
+        self.buffer = bytearray()
+        self.availablePackets = {
             0x00: "null",
             0x01: "connect",
             0x02: "connack",
@@ -22,15 +41,9 @@ class MQTTProtocol(Protocol):
             0x0E: "disconnect"
         }
 
-    def __init__(self):
-        pass
-
-        
-        
 
     def connectionMade(self):
-        print("Connessione effettuata")
-        pass
+        print("[PROTOCOL] CONNESSIONE EFFETTUATA")
 
     def connectionLost(self, reason):
         pass
@@ -44,7 +57,7 @@ class MQTTProtocol(Protocol):
         length = None
         while len(self.buffer):
             if length is None:
-                # si ha un pacchettoo da processare
+                # si ha un pacchetto da processare
 
                 if len(self.buffer) < 2: # non ci sono abbastanza dati per inizializzare un nuovo pacchetto
                     break
@@ -72,7 +85,7 @@ class MQTTProtocol(Protocol):
     def _workPacket(self, packet):
         try:
             packetType = self.availablePackets[(packet[0] & 0xF0) >> 4]
-            print("[PROTOCOL] RICEVO => " + packetType)
+            print("[PROTOCOL] RICEVO => " + upper(packetType))
             duplicate = (packet[0] & 0x08) == 0x08
             packetQoS = (packet[0] & 0x06) >> 1
             retain = (packet[0] & 0x01) == 0x01

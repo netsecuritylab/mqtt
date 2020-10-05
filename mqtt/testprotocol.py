@@ -19,11 +19,11 @@ class MQTTListenerFactory(ReconnectingClientFactory):
         return p
 
     def clientConnectionLost(self, connector, reason):
-        print("Connessione persa: {}".format(reason))
+        print("CONNESSIONE PERSA: {}".format(reason))
         ReconnectingClientFactory.clientConnectionLost(self, connector, reason)
     
     def clientConnectionFailed(self, connector, reason):
-        print("Connessione fallita: {}".format(reason))
+        print("CONNNESSIONE FALLITA: {}".format(reason))
         ReconnectingClientFactory.clientConnectionFailed(self, connector, reason)
 
 

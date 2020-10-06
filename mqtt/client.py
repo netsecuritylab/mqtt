@@ -1,5 +1,6 @@
 from mqttprotocol import MQTTProtocol
 import random
+import time
 
 class MQTTClient(MQTTProtocol):
 
@@ -32,7 +33,17 @@ class MQTTClient(MQTTProtocol):
         self.subscribe("prova_sub_false", qos=0, messageId=20)
 
         print("[CLIENT] INVIO PUBLISH")
-        self.publish("prova_sub", message="teéstss", messageId=5005, qos=1)
+        #self.publish("prova_sub", message="packet 1", messageId=5005, qos=2)
+
+        #self.pubrel(messageId=5007)
+
+        #time.sleep(5)
+
+        #self.publish("prova_sub", message="packet 2", messageId=5005, qos=2)
+        #self.pubrel(messageId=5005)
+        self.pubrel(messageId=5005)
+        self.pingreq()
+        self.disconnect()
 
         #print("[CLIENT] INVIO UNSUBSCRIBE")
         #self.unsubscribe("prova_sub", messageId=30)

@@ -29,10 +29,10 @@ class MQTTClient(MQTTProtocol):
         print("[CLIENT] CONNACK => RICEVUTO")
 
         print("[CLIENT] INVIO SUBSCRIBE")
-        self.subscribe("prova_sub", qos=0, messageId=20)
+        self.subscribe("prova_sub_false", qos=0, messageId=20)
 
         print("[CLIENT] INVIO PUBLISH")
-        self.publish("prova_sub", message="testss", messageId=5005, qos=0)
+        self.publish("prova_sub", message="teéstss", messageId=5005, qos=1)
 
         #print("[CLIENT] INVIO UNSUBSCRIBE")
         #self.unsubscribe("prova_sub", messageId=30)

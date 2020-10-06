@@ -144,7 +144,7 @@ class MQTTProtocol(Protocol):
             packet = packet[2:]
         
 
-        message = str(packet)
+        message = _decodeString(packet)
         
         self.publishReceived(topic, message, qos, dup, retain, messageId)
 
@@ -164,6 +164,10 @@ class MQTTProtocol(Protocol):
         messageId = _decodeValue(packet[:2])
         
         self.unsubackReceived(messageId)
+
+    def puback_event(self, packet, qos, dup, retain):
+        messageId = _decodeValue(packet[:2])
+        self.pubackReceived(messageId)
 
     def connect(self, clientId, keepalive=60, willTopic=None, willMessage=None, willQoS=0, willRetain=False, cleanStart=True):
         
@@ -264,8 +268,6 @@ class MQTTProtocol(Protocol):
         
         payload.extend(_encodeString(message.encode("utf-8")))
 
-
-        print(payload)
         header.extend(_encodeLength(len(varHeader) + len(payload)))
 
         self.transport.write(header)
@@ -289,7 +291,10 @@ class MQTTProtocol(Protocol):
         pass
 
     def publishReceived(self, topic, message, qos=0, dup=False, retain=False, messageId=None):
-        print("NUOVO MESSAGGIO RICEVUTO DAL TOPIC " + str(topic).upper() + " => " + message)
+        print("MESSAGGIO RICEVUTO DA {} => {} ".format(topic, message))
+        pass
+
+    def pubackReceived(self, messageId):
         pass
 
     

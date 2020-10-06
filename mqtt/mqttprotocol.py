@@ -85,7 +85,7 @@ class MQTTProtocol(Protocol):
         if packetHandler:
             packetHandler(packet, packetQoS, duplicate, retain)
         else:
-            print("Non posso gestire questo pacchetto.")
+            print("Non posso gestire questo pacchetto")
             return
 
     def connack_event(self, packet, qos, dup, retain):
@@ -132,6 +132,21 @@ class MQTTProtocol(Protocol):
             topics.append((topic, qos))
 
         self.subscribeReceived(topics, messageId)
+
+    def publish_event(self, packet, qos, dup, retain):
+        topic = _decodeString(packet)
+        packet = packet[len(topic) + 2:]
+
+        messageId = None
+
+        if qos > 0:
+            messageId = _decodeValue(packet[:2])
+            packet = packet[2:]
+        
+
+        message = str(packet)
+        
+        self.publishReceived(topic, message, qos, dup, retain, messageId)
 
     def suback_event(self, packet, qos, dup, retain):
         messageId = _decodeValue(packet[:2])
@@ -230,6 +245,33 @@ class MQTTProtocol(Protocol):
         self.transport.write(varHeader)
         self.transport.write(payload)
 
+    def publish(self, topic, message, dup=False, qos=0, retain=False, messageId=None):
+        header = bytearray()
+        varHeader = bytearray()
+        payload = bytearray()
+
+        header.append(0x03 << 4 | dup << 3 | qos << 1 | retain) # primo byte: 0011 dup qos retain
+
+        varHeader.extend(_encodeString(topic.encode('utf-8'))) # topic
+
+
+        if qos > 0:
+            if messageId is None:
+                varHeader.extend(_encodeValue(random.randint(1, 65535)))
+            else:
+                varHeader.extend(_encodeValue(messageId))
+
+        
+        payload.extend(_encodeString(message.encode("utf-8")))
+
+
+        print(payload)
+        header.extend(_encodeLength(len(varHeader) + len(payload)))
+
+        self.transport.write(header)
+        self.transport.write(varHeader)
+        self.transport.write(payload)
+        
 
     def connackReceived(self, status):
         pass
@@ -244,6 +286,10 @@ class MQTTProtocol(Protocol):
         pass
 
     def connectReceived(self, clientId, keepalive, willTopic, willMessage, willQoS, willRetain, cleanStart):
+        pass
+
+    def publishReceived(self, topic, message, qos=0, dup=False, retain=False, messageId=None):
+        print("NUOVO MESSAGGIO RICEVUTO DAL TOPIC " + str(topic).upper() + " => " + message)
         pass
 
     

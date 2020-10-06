@@ -19,7 +19,7 @@ class MQTTClient(MQTTProtocol):
 
 
     def connackReceived(self, status):
-        if status == 0:
+        if status == 0: # 0 per "connessione accettata"
             self.connectMqtt()
         else:
             print("[CLIENT] ERRORE CONNACK")
@@ -30,8 +30,12 @@ class MQTTClient(MQTTProtocol):
 
         print("[CLIENT] INVIO SUBSCRIBE")
         self.subscribe("prova_sub", qos=0, messageId=20)
-        print("[CLIENT] INVIO UNSUBSCRIBE")
-        self.unsubscribe("prova_sub", messageId=30)
+
+        print("[CLIENT] INVIO PUBLISH")
+        self.publish("prova_sub", message="testss", messageId=5005, qos=0)
+
+        #print("[CLIENT] INVIO UNSUBSCRIBE")
+        #self.unsubscribe("prova_sub", messageId=30)
     
 
 

@@ -165,9 +165,24 @@ class MQTTProtocol(Protocol):
         
         self.unsubackReceived(messageId)
 
-    def puback_event(self, packet, qos, dup, retain):
+    def puback_event(self, packet):
         messageId = _decodeValue(packet[:2])
         self.pubackReceived(messageId)
+
+    def pubrec_event(self, packet, qos, dup, retain):
+        messageId = _decodeValue(packet[:2])
+        self.pubrecReceived(messageId)
+
+    def pubrel_event(self, packet, qos, dup, retain):
+        messageId = _decodeValue(packet[:2])
+        self.pubrelReceived(messageId)
+
+    def pubcomp_event(self, packet, qos, dup, retain):
+        messageId = _decodeValue(packet[:2])
+        self.pubcompReceived(messageId)
+
+    def pingresp_event(self, packet, qos, dup, retain):
+        self.pingrespReceived()
 
     def connect(self, clientId, keepalive=60, willTopic=None, willMessage=None, willQoS=0, willRetain=False, cleanStart=True):
         
@@ -265,15 +280,41 @@ class MQTTProtocol(Protocol):
             else:
                 varHeader.extend(_encodeValue(messageId))
 
-        
         payload.extend(_encodeString(message.encode("utf-8")))
-
         header.extend(_encodeLength(len(varHeader) + len(payload)))
 
         self.transport.write(header)
         self.transport.write(varHeader)
         self.transport.write(payload)
         
+    def pubrel(self, messageId):
+        header = bytearray()
+        varHeader = bytearray()
+
+        header.append(0x06 << 4 | 0x02 << 0)
+
+        varHeader.extend(_encodeValue(messageId))
+        header.extend(_encodeLength(len(varHeader)))
+
+        self.transport.write(header)
+        self.transport.write(varHeader)
+
+
+    def pingreq(self):
+        header = bytearray()
+
+        header.append(0x0C << 4)
+        header.extend(_encodeLength(0))
+
+        self.transport.write(header)
+
+    def disconnect(self):
+        header = bytearray()
+
+        header.append(0x0E << 4)
+        header.extend(_encodeLength(0))
+
+        self.transport.write(header)
 
     def connackReceived(self, status):
         pass
@@ -297,6 +338,17 @@ class MQTTProtocol(Protocol):
     def pubackReceived(self, messageId):
         pass
 
-    
+    def pubrecReceived(self, messageId):
+        self.pubrel(messageId)
+        pass
 
+    def pubrelReceived(self, messageId):
+        pass
+
+    def pubcompReceived(self, messageId):
+        print("[PROTOCOL] PUBCOMP ID " + str(messageId))
+        pass
+    
+    def pingrespReceived(self):
+        pass
 

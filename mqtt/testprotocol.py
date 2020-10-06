@@ -8,12 +8,13 @@ from client import MQTTClient
 
 class MQTTListenerFactory(ReconnectingClientFactory):
 
-    def __init__(self, service=None):
+    def __init__(self, service=None, client_id="edo"):
         self.service = service
         self.protocol = MQTTClient
+        self.clientId = client_id
 
     def buildProtocol(self, addr):
-        p = self.protocol(clientId="edo_best", keepalive=60000, willQoS=1, willTopic="True", willMessage="True", willRetain=0)
+        p = self.protocol(clientId=self.clientId, keepalive=60000, willQoS=1, willTopic="True", willMessage="True", willRetain=0)
         p.factory = self
         self.protocol = p
         return p
@@ -25,7 +26,6 @@ class MQTTListenerFactory(ReconnectingClientFactory):
     def clientConnectionFailed(self, connector, reason):
         print("CONNNESSIONE FALLITA: {}".format(reason))
         #ReconnectingClientFactory.clientConnectionFailed(self, connector, reason)
-
 
 if __name__ == "__main__":
     mqttFactory = MQTTListenerFactory()

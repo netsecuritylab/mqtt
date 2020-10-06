@@ -1,0 +1,8 @@
+[
+    {
+        "packet": "subscribe",
+        "params": {
+            "topic": "test"
+        }
+    }
+]

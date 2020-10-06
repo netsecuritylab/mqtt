@@ -46,4 +46,4 @@ def _encodeString(string):
 
 def _decodeString(encodedString):
     length = 256 * encodedString[0] + encodedString[1]
-    return str(encodedString[2:2+length])
+    return str(encodedString[2:2+length].decode())

@@ -231,7 +231,7 @@ class MQTTProtocol(Protocol):
 
         header.append(0x08 << 4 | 0x01 << 1) # 130 in decimale, 1000010 in binario (packet header subscribe richiede 1 0 0 0 0 0 1 0)
 
-        if messageId is None:
+        if messageId is None or messageId > 65535:
             varHeader.extend(_encodeValue(random.randint(1, 65535))) # max id 65535, da provare messaggi id più grandi di 65535
         else:
             varHeader.extend(_encodeValue(messageId))

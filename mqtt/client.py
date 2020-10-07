@@ -5,7 +5,7 @@ from twisted.internet import reactor
 
 class MQTTClient(MQTTProtocol):
 
-    def __init__(self, clientId=None, keepalive=None, willQoS=1, willTopic=None, willMessage=None, willRetain=None, packets=None):
+    def __init__(self, clientId=None, keepalive=None, willQoS=1, willTopic=None, willMessage=None, willRetain=None, packets=None, delay=None):
 
         self.clientId = clientId if clientId is not None else "client_" + str(random.randint(0, 2000))
         self.keepalive = keepalive if keepalive is not None else 60000
@@ -23,11 +23,14 @@ class MQTTClient(MQTTProtocol):
             "disconnect": self.sendDisconnect
         }
 
+        self.delayExecution = delay
+
     def connectionMade(self):
         print("[CLIENT] INVIO CONNECT")
         self.connect(self.clientId, self.keepalive, self.willTopic, self.willMessage, self.willQoS, self.willRetain, True)
         print("[CLIENT] CONNESSO AL BROKER")
         reactor.callLater(self.keepalive//1000, self.pingreq)
+       
         reactor.callLater(5, self.processPackets)
 
     def pingrespReceived(self):
@@ -42,13 +45,20 @@ class MQTTClient(MQTTProtocol):
             pass
 
     def processPackets(self):
-        if len(self.packets) > 0:
-            packet = self.packets[0]
-            self.packets = self.packets[1:]
-            packetName = packet["type"]
-            self.mapPacketsFunction[packetName](packet)
+        if self.delayExecution is None:
+            while len(self.packets):
+                """packet = self.packets[0]
+                self.packets = self.packets[1:]"""
+                packet = self.packets.pop(0)
+                packetName = packet["type"]
+                self.mapPacketsFunction[packetName](packet)
+        else:
+            if len(self.packets) > 0:
+                packet = self.packets.pop(0)
+                packetName = packet["type"]
+                self.mapPacketsFunction[packetName](packet)
 
-        reactor.callLater(1, self.processPackets)
+        reactor.callLater(5, self.processPackets)
 
     def addPacket(self, packet):
         self.packets.append(packet)

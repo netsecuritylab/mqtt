@@ -165,7 +165,7 @@ class MQTTProtocol(Protocol):
         
         self.unsubackReceived(messageId)
 
-    def puback_event(self, packet):
+    def puback_event(self, packet, qos, dup, retain):
         messageId = _decodeValue(packet[:2])
         self.pubackReceived(messageId)
 
@@ -339,7 +339,7 @@ class MQTTProtocol(Protocol):
         pass
 
     def pubrecReceived(self, messageId):
-        self.pubrel(messageId)
+        #self.pubrel(messageId)
         pass
 
     def pubrelReceived(self, messageId):

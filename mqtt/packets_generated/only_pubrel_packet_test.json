@@ -1,0 +1,8 @@
+[
+    {
+        "type": "pubrel",
+        "params": {
+            "packetId": 1
+        }
+    }
+]

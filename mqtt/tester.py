@@ -12,7 +12,7 @@ class Listener(ReconnectingClientFactory):
         self.service = service
         self.protocol = MQTTClient
         self.packets = packets
-        print(packets[0])
+        
 
     def buildProtocol(self, addr):
         proto = self.protocol(packets=self.packets)

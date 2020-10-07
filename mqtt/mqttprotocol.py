@@ -244,7 +244,7 @@ class MQTTProtocol(Protocol):
         self.transport.write(varHeader)
         self.transport.write(payload)
 
-    def unsubscribe(self, topic, messageId):
+    def unsubscribe(self, topic, messageId=None):
         header = bytearray()
         varHeader = bytearray()
         payload = bytearray()

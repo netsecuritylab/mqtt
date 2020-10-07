@@ -14,6 +14,14 @@ class MQTTClient(MQTTProtocol):
         self.willMessage = willMessage
         self.willRetain = willRetain
         self.packets = packets
+        self.mapPacketsFunction = {
+            "subscribe": self.sendSubscribe,
+            "publish": self.sendPublish,
+            "unsubscribe": self.sendUnsubscribe,
+            "pubrel": self.sendPubrel,
+            "pingreq": self.sendPingreq,
+            "disconnect": self.sendDisconnect
+        }
 
     def connectionMade(self):
         print("[CLIENT] INVIO CONNECT")
@@ -34,34 +42,49 @@ class MQTTClient(MQTTProtocol):
             pass
 
     def processPackets(self):
-        print(self.packets)
-        reactor.callLater(5, self.processPackets)
+        if len(self.packets) > 0:
+            packet = self.packets[0]
+            self.packets = self.packets[1:]
+            packetName = packet["type"]
+            self.mapPacketsFunction[packetName](packet)
+
+        reactor.callLater(1, self.processPackets)
 
     def addPacket(self, packet):
         self.packets.append(packet)
 
+    def sendSubscribe(self, packet):
+        params = packet["params"]
+
+        if "packetId" in params:
+            return self.subscribe(params["topic"], messageId=params["packetId"])
+        
+        return self.subscribe(params["topic"], messageId=None)
+
+    def sendPublish(self, packet):
+        params = packet["params"]
+        return self.publish(topic=params["topic"], message=params["message"], dup=params["dup"], qos=params["qos"], messageId=params["packetId"], retain=params["retain"])
+
+    def sendUnsubscribe(self, packet):
+        params = packet["params"]
+
+        if "packetId" in params:
+            return self.unsubscribe(params["topic"], messageId=params["packetId"])
+        
+        return self.unsubscribe(params["topic"])
+
+    def sendPubrel(self, packet):
+        params = packet["params"]
+        return self.pubrel(params["packetId"])
+
+    def sendPingreq(self, packet):
+        return self.pingreq()
+
+    def sendDisconnect(self, packet):
+        return self.disconnect()
+
     def connectMqtt(self):
         pass
-        """print("[CLIENT] CONNACK => RICEVUTO")
-
-        print("[CLIENT] INVIO SUBSCRIBE")
-        self.subscribe("prova_sub_false", qos=0, messageId=20)
-
-        print("[CLIENT] INVIO PUBLISH")
-        #self.publish("prova_sub", message="packet 1", messageId=5005, qos=2)
-
-        #self.pubrel(messageId=5007)
-
-        #time.sleep(5)
-
-        #self.publish("prova_sub", message="packet 2", messageId=5005, qos=2)
-        #self.pubrel(messageId=5005)
-        self.pubrel(messageId=5005)
-        self.pingreq()
-        self.disconnect()
-
-        #print("[CLIENT] INVIO UNSUBSCRIBE")
-        #self.unsubscribe("prova_sub", messageId=30)"""
     
 
 

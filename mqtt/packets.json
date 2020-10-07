@@ -1,8 +1,50 @@
 [
     {
-        "packet": "subscribe",
+        "type": "subscribe",
         "params": {
             "topic": "test"
         }
+    },
+
+    {
+        "type": "subscribe",
+        "params": {
+            "topic": "#"
+        }
+    },
+
+    {
+        "type": "publish",
+        "params": {
+            "topic": "test",
+            "message": "buonasera",
+            "qos": 0,
+            "dup": false,
+            "retain": false,
+            "packetId": 5
+        }
+    },
+
+    {
+        "type": "unsubscribe",
+        "params": {
+            "topic": "test",
+            "packetId": 50
+        }
+    },
+
+    {
+        "type": "pubrel",
+        "params": {
+            "packetId": 500
+        }
+    },
+
+    {
+        "type": "pingreq"
+    },
+
+    {
+        "type": "disconnect"
     }
 ]

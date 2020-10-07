@@ -8,15 +8,14 @@ import time
 
 class Listener(ReconnectingClientFactory):
 
-    def __init__(self, service=None, packets=None, delay=None):
+    def __init__(self, service=None, packets=None):
         self.service = service
         self.protocol = MQTTClient
         self.packets = packets
-        self.delay = delay
         
 
     def buildProtocol(self, addr):
-        proto = self.protocol(packets=self.packets, delay=self.delay)
+        proto = self.protocol(packets=self.packets)
         proto.factory = self
         self.protocol = proto
         return proto
@@ -43,12 +42,11 @@ class Listener(ReconnectingClientFactory):
 @click.option('--host', default="localhost", help='L\'host del broker MQTT', show_default=True)
 @click.option('--port', default=1883, help="La porta del broker MQTT", show_default=True)
 @click.option('--packets', default="", help="Lista dei pacchetti da inviare", show_default=True)
-@click.option('--delay', default=None, help="Ritardo nell'esecuzione dei pacchetti", show_default=True)
 
-def hello(host, port, packets, delay):
+def hello(host, port, packets):
     with open(packets, mode='r') as f:
         loadedPackets = json.load(f)
-    mqttListener = Listener(packets=loadedPackets, delay=delay)
+    mqttListener = Listener(packets=loadedPackets)
     reactor.connectTCP(host, port, mqttListener)
     reactor.run()
     

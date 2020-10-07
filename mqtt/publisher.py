@@ -91,7 +91,7 @@ class MQTTService(ClientService):
 
 if __name__ == "__main__":
     import sys
-    import generate_tests
+    #import generate_tests
 
     #tests = generate_tests.GenerateTests("./test_case/connect/")
     #buildedTests = tests.buildTest(testNumber=5, writeToFiles=False)

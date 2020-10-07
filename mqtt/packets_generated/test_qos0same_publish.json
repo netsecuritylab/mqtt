@@ -1,0 +1,33 @@
+[   
+    
+    {
+       "type": "subscribe",
+       "params": {
+           "topic": "test/topic"
+       }     
+    },
+
+    {
+        "type": "publish",
+        "params": {
+            "topic": "test/topic",
+            "message": "pacchetto #1",
+            "qos": 0,
+            "dup": false,
+            "retain": false,
+            "packetId": 1
+        }
+    },
+
+    {
+        "type": "publish",
+        "params": {
+            "topic": "test/topic",
+            "message": "pacchetto #2",
+            "qos": 0,
+            "dup": false,
+            "retain": false,
+            "packetId": 1
+        }
+    }
+]

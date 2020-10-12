@@ -12,7 +12,7 @@
         "params": {
             "topic": "test/topic",
             "message": "pacchetto #1",
-            "qos": 2,
+            "qos": 1,
             "dup": false,
             "retain": false,
             "packetId": 1
@@ -24,25 +24,10 @@
         "params": {
             "topic": "test/topic",
             "message": "pacchetto #2",
-            "qos": 2,
+            "qos": 1,
             "dup": false,
             "retain": false,
             "packetId": 1
         }
-    },
-
-    {
-        "type": "pubrel",
-        "params": {
-            "packetId": 2
-        }
-    },
-
-    {
-        "type": "pubrel",
-        "params": {
-            "packetId": 1
-        }
     }
-
 ]

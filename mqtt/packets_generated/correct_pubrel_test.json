@@ -34,7 +34,7 @@
     {
         "type": "pubrel",
         "params": {
-            "packetId": 2
+            "packetId": 1
         }
     },
 

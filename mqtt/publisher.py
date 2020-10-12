@@ -106,10 +106,10 @@ if __name__ == "__main__":
     myend = clientFromString(reactor, endpoint)
     services = []
     n = 100
-    for i in range(0, 1024):
+    for i in range(0, 10):
         serv = MQTTService(myend, factory, i)
         services.append(serv)
 
-    for i in range(0, 1024):
+    for i in range(0, 10):
         services[i].startService()
     reactor.run()

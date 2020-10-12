@@ -20,23 +20,12 @@
     },
 
     {
-        "type": "publish",
-        "params": {
-            "topic": "test/topic",
-            "message": "pacchetto #2",
-            "qos": 2,
-            "dup": false,
-            "retain": false,
-            "packetId": 1
-        }
-    },
-
-    {
         "type": "pubrel",
         "params": {
             "packetId": 2
         }
     },
+
 
     {
         "type": "pubrel",

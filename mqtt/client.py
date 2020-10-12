@@ -43,7 +43,7 @@ class MQTTClient(MQTTProtocol):
             pass
 
     def processPackets(self):
-        if False == True:
+        if True == True:
             while len(self.packets):
                 """packet = self.packets[0]
                 self.packets = self.packets[1:]"""
@@ -56,7 +56,7 @@ class MQTTClient(MQTTProtocol):
                 packetName = packet["type"]
                 self.mapPacketsFunction[packetName](packet)
 
-        reactor.callLater(1/100, self.processPackets)
+        reactor.callLater(2, self.processPackets)
 
     def addPacket(self, packet):
         self.packets.append(packet)

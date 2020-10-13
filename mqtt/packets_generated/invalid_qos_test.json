@@ -1,0 +1,21 @@
+[   
+    
+    {
+       "type": "subscribe",
+       "params": {
+           "topic": "test/topic"
+       }     
+    },
+
+    {
+        "type": "publish",
+        "params": {
+            "topic": "test/topic",
+            "message": "pacchetto #1",
+            "qos": 3,
+            "dup": false,
+            "retain": false,
+            "packetId": 1
+        }
+    }
+]

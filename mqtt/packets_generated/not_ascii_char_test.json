@@ -1,0 +1,28 @@
+[   
+    
+    {
+       "type": "subscribe",
+       "params": {
+           "topic": "¥/¥"
+       }     
+    },
+
+    {
+        "type": "publish",
+        "params": {
+            "topic": "¥/¥",
+            "message": "¥ آٍٍٍَُّ🇮🇹 بٍٍٍٍََُُُِّّّْرٍٍٍٍََُُِِّّّْآٍٍٍَُّ🇮🇹 ������",
+            "qos": 1,
+            "dup": false,
+            "retain": false,
+            "packetId": 1
+        }
+    },
+
+    {
+        "type": "unsubscribe",
+        "params": {
+            "topic": "������"
+        }
+    }
+]

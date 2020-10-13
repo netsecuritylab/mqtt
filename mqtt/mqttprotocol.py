@@ -26,6 +26,10 @@ class MQTTProtocol(Protocol):
             0x0E: "disconnect"
         }
 
+    receivedPacketColor = "\033[92m"
+    sentPacketColor = "\033[94m"
+    endColor = "\033[0m"
+
     packetsCount = 0
 
     def __init__(self):
@@ -74,7 +78,9 @@ class MQTTProtocol(Protocol):
         try:
             packetType = self.availablePackets[(packet[0] & 0xF0) >> 4]
             self.packetsCount += 1
-            print("PACKET RECEIVED => " + packetType.upper() + " TIMESTAMP: " + str(datetime.datetime.now().timestamp()) + " [#" + str(self.packetsCount) +"]")
+            if packetType == "connack":
+                print(self.receivedPacketColor + " PACKET RECEIVED => CONNACK" + self.endColor)
+            #print("\033[36m PACKET RECEIVED => " + packetType.upper() + " TIMESTAMP: " + str(datetime.datetime.now().timestamp()) + " [#" + str(self.packetsCount) +"] \033[0m")
             duplicate = (packet[0] & 0x08) == 0x08
             packetQoS = (packet[0] & 0x06) >> 1
             retain = (packet[0] & 0x01) == 0x01
@@ -192,6 +198,7 @@ class MQTTProtocol(Protocol):
 
     def connect(self, clientId, keepalive=60, willTopic=None, willMessage=None, willQoS=0, willRetain=False, cleanStart=True):
         
+        print(self.sentPacketColor + "\n PACKET SENT => CONNECT" + self.endColor)
         header = bytearray()
         varHeader = bytearray()
         payload = bytearray()
@@ -220,6 +227,7 @@ class MQTTProtocol(Protocol):
         self.transport.write(payload)
 
     def connack(self, status):
+        print(self.sentPacketColor + " PACKET SENT => CONNACK")
         header = bytearray()
         payload = bytearray()
 
@@ -231,6 +239,7 @@ class MQTTProtocol(Protocol):
         self.transport.write(payload)
 
     def subscribe(self, topic, qos=0, messageId=None):
+        print(self.sentPacketColor + " PACKET SENT => SUBSCRIBE [TOPIC: "+ topic +"]" + self.endColor)
         header = bytearray()
         varHeader = bytearray()
         payload = bytearray()
@@ -251,6 +260,7 @@ class MQTTProtocol(Protocol):
         self.transport.write(payload)
 
     def unsubscribe(self, topic, messageId=None):
+        print(self.sentPacketColor + " PACKET SENT => UNSUBSCRIBE [TOPIC: "+ topic +"]" + self.endColor)
         header = bytearray()
         varHeader = bytearray()
         payload = bytearray()
@@ -271,6 +281,7 @@ class MQTTProtocol(Protocol):
         self.transport.write(payload)
 
     def publish(self, topic, message, dup=False, qos=0, retain=False, messageId=None):
+        print(self.sentPacketColor + " PACKET SENT => PUBLISH [QoS: "+ str(qos) +", id: "+ str(messageId) +", payload: "+ str(message) +"]" + self.endColor)
         header = bytearray()
         varHeader = bytearray()
         payload = bytearray()
@@ -294,7 +305,7 @@ class MQTTProtocol(Protocol):
         self.transport.write(payload)
         
     def pubrel(self, messageId):
-        print("INVIO PUBREL PER IL PACCHETTO #" + str(messageId))
+        print(self.sentPacketColor + " PACKET SENT => PUBREL [PACKET #" + str(messageId) + "]" + self.endColor)
         header = bytearray()
         varHeader = bytearray()
 
@@ -308,6 +319,7 @@ class MQTTProtocol(Protocol):
 
 
     def pingreq(self):
+        print(self.sentPacketColor + " PACKET SENT => PINGREQ" + self.endColor)
         header = bytearray()
 
         header.append(0x0C << 4)
@@ -316,6 +328,7 @@ class MQTTProtocol(Protocol):
         self.transport.write(header)
 
     def disconnect(self):
+        print(self.sentPacketColor + " PACKET SENT => DISCONNECT" + self.endColor)
         header = bytearray()
 
         header.append(0x0E << 4)
@@ -327,33 +340,39 @@ class MQTTProtocol(Protocol):
         pass
 
     def subackReceived(self, qos, messageId):
+        print(self.receivedPacketColor + " PACKET RECEIVED => SUBACK [id: "+ str(messageId) +", TS: "+ str(datetime.datetime.now().timestamp()) + ", #" + str(self.packetsCount) +"]" + self.endColor)
         pass
 
     def unsubackReceived(self, messageId):
+        print(self.receivedPacketColor + " PACKET RECEIVED => UNSUBACK [id: "+ str(messageId) +", TS: "+ str(datetime.datetime.now().timestamp()) + ", #" + str(self.packetsCount) +"]" + self.endColor)
         pass
 
     def subscribeReceived(self, topics, messageId):
+        print(self.receivedPacketColor + " PACKET RECEIVED => SUBSCRIBE [id: "+ str(messageId) +", topic: "+ str(topics) +", TS: "+ str(datetime.datetime.now().timestamp()) + ", #" + str(self.packetsCount) +"]" + self.endColor)
         pass
 
     def connectReceived(self, clientId, keepalive, willTopic, willMessage, willQoS, willRetain, cleanStart):
         pass
 
     def publishReceived(self, topic, message, qos=0, dup=False, retain=False, messageId=None):
-        print("MESSAGGIO RICEVUTO DA {} => {} ".format(topic, message))
+        print(self.receivedPacketColor + " PACKET RECEIVED => PUBLISH [id: "+ str(messageId) +", QoS: "+ str(qos) +", payload: "+ str(message) +", topic: "+ str(topic) +", TS: "+ str(datetime.datetime.now().timestamp()) + ", #" + str(self.packetsCount) +"]" + self.endColor)
         pass
 
     def pubackReceived(self, messageId):
+        print(self.receivedPacketColor + " PACKET RECEIVED => PUBACK [id: "+ str(messageId) +", TS: "+ str(datetime.datetime.now().timestamp()) + ", #" + str(self.packetsCount) +"]" + self.endColor)
         pass
 
     def pubrecReceived(self, messageId):
         #self.pubrel(messageId)
+        print(self.receivedPacketColor + " PACKET RECEIVED => PUBREC [id: "+ str(messageId) +", TS: "+ str(datetime.datetime.now().timestamp()) + ", #" + str(self.packetsCount) +"]" + self.endColor)
         pass
 
     def pubrelReceived(self, messageId):
+        print(self.receivedPacketColor + " PACKET RECEIVED => PUBREL [id: "+ str(messageId) +", TS: "+ str(datetime.datetime.now().timestamp()) + ", #" + str(self.packetsCount) +"]" + self.endColor)
         pass
 
     def pubcompReceived(self, messageId):
-        print("PUBCOMP ID " + str(messageId))
+        print(self.receivedPacketColor + " PACKET RECEIVED => PUBCOMP [id: "+ str(messageId) +", TS: "+ str(datetime.datetime.now().timestamp()) + ", #" + str(self.packetsCount) +"]" + self.endColor)
         pass
     
     def pingrespReceived(self):

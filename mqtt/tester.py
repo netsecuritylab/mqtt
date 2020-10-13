@@ -15,7 +15,11 @@ class Listener(ReconnectingClientFactory):
         
 
     def buildProtocol(self, addr):
+<<<<<<< HEAD
         proto = self.protocol(packets=self.packets)
+=======
+        proto = self.protocol(packets=self.packets, clientId="������")
+>>>>>>> fix
         proto.factory = self
         self.protocol = proto
         return proto

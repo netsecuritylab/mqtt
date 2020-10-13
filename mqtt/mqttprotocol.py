@@ -288,6 +288,10 @@ class MQTTProtocol(Protocol):
         self.transport.write(payload)
         
     def pubrel(self, messageId):
+<<<<<<< HEAD
+=======
+        print("INVIO PUBREL PER IL PACCHETTO #" + str(messageId))
+>>>>>>> fix
         header = bytearray()
         varHeader = bytearray()
 

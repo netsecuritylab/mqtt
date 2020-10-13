@@ -24,15 +24,15 @@ class MQTTClient(MQTTProtocol):
         }
 
     def connectionMade(self):
-        print("[CLIENT] INVIO CONNECT")
+        #print("[CLIENT] INVIO CONNECT")
         self.connect(self.clientId, self.keepalive, self.willTopic, self.willMessage, self.willQoS, self.willRetain, True)
-        print("[CLIENT] CONNESSO AL BROKER")
+        #print("[CLIENT] CONNESSO AL BROKER")
         reactor.callLater(self.keepalive//1000, self.pingreq)
        
         reactor.callLater(1/100, self.processPackets)
 
     def pingrespReceived(self):
-        print("[CLIENT] PINGRESP RICEVUTO DAL BROKER")
+        #print("[CLIENT] PINGRESP RICEVUTO DAL BROKER")
         reactor.callLater(self.keepalive//1000, self.pingreq)
 
     def connackReceived(self, status):
@@ -71,7 +71,7 @@ class MQTTClient(MQTTProtocol):
 
     def sendPublish(self, packet):
         params = packet["params"]
-        print("PUBBLICO PACCHETTO id: " + str(params["packetId"]) + ", qos: " + str(params["qos"]))
+        #print("PUBBLICO PACCHETTO id: " + str(params["packetId"]) + ", qos: " + str(params["qos"]))
         return self.publish(topic=params["topic"], message=params["message"], dup=params["dup"], qos=params["qos"], messageId=params["packetId"], retain=params["retain"])
 
     def sendUnsubscribe(self, packet):

@@ -1,6 +1,9 @@
 from twisted.internet.protocol import Protocol
 from utils import _decodeLength, _decodeValue, _decodeString, _encodeLength, _encodeString, _encodeValue
 import random
+import datetime
+import time
+import calendar
 
 class MQTTProtocol(Protocol):
 
@@ -22,6 +25,8 @@ class MQTTProtocol(Protocol):
             0x0D: "pingresp",
             0x0E: "disconnect"
         }
+
+    packetsCount = 0
 
     def __init__(self):
         pass
@@ -68,7 +73,8 @@ class MQTTProtocol(Protocol):
     def _workPacket(self, packet):
         try:
             packetType = self.availablePackets[(packet[0] & 0xF0) >> 4]
-            print("[PROTOCOL] RICEVO => " + packetType.upper())
+            self.packetsCount += 1
+            print("PACKET RECEIVED => " + packetType.upper() + " TIMESTAMP: " + str(datetime.datetime.now().timestamp()) + " [#" + str(self.packetsCount) +"]")
             duplicate = (packet[0] & 0x08) == 0x08
             packetQoS = (packet[0] & 0x06) >> 1
             retain = (packet[0] & 0x01) == 0x01
@@ -288,10 +294,7 @@ class MQTTProtocol(Protocol):
         self.transport.write(payload)
         
     def pubrel(self, messageId):
-<<<<<<< HEAD
-=======
         print("INVIO PUBREL PER IL PACCHETTO #" + str(messageId))
->>>>>>> fix
         header = bytearray()
         varHeader = bytearray()
 
@@ -350,7 +353,7 @@ class MQTTProtocol(Protocol):
         pass
 
     def pubcompReceived(self, messageId):
-        print("[PROTOCOL] PUBCOMP ID " + str(messageId))
+        print("PUBCOMP ID " + str(messageId))
         pass
     
     def pingrespReceived(self):

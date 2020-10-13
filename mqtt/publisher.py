@@ -10,7 +10,7 @@ from mqtt.client.factory import MQTTFactory
 import pyradamsa
 import random
 
-endpoint = "tcp:localhost:1883"
+endpoint = "tcp:192.168.1.24:1883"
 logLevelFilterPredicate = LogLevelFilterPredicate(defaultLogLevel=LogLevel.debug)
 radamsa = pyradamsa.Radamsa()
 
@@ -80,7 +80,23 @@ class MQTTService(ClientService):
 
         fuzzed_data = radamsa.fuzz(bytes("hello", "utf-8"))
         #print(fuzzed_data)
-        d1 = self.protocol.publish(topic="test/publishtest", qos=2, message=str(fuzzed_data))
+
+        a = ""
+
+        """for i in range(0, 0xF4240): # 1mb
+            a += "a"
+        """
+
+        """for i in range(0, 0x989680): # 10mb
+            a += "a"
+        """
+        
+
+        for i in range(0, 0x5F5E100): # 100mb
+            a += "a"
+        
+
+        d1 = self.protocol.publish(topic="test/publishtest", qos=0, message=a)
         d1.addErrback(_logFailure)
 
         dlist = DeferredList([d1], consumeErrors=True)
@@ -106,10 +122,13 @@ if __name__ == "__main__":
     myend = clientFromString(reactor, endpoint)
     services = []
     n = 100
-    for i in range(0, 10):
+
+    serv = MQTTService(myend, factory, 1)
+    serv.startService()
+    """for i in range(0, 10):
         serv = MQTTService(myend, factory, i)
         services.append(serv)
 
     for i in range(0, 10):
-        services[i].startService()
+        services[i].startService()"""
     reactor.run()

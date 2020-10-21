@@ -56,7 +56,7 @@ class MQTTClient(MQTTProtocol):
                 packetName = packet["type"]
                 self.mapPacketsFunction[packetName](packet)
 
-        reactor.callLater(2, self.processPackets)
+        reactor.callLater(1//5, self.processPackets)
 
     def addPacket(self, packet):
         self.packets.append(packet)

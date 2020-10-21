@@ -1,0 +1,22 @@
+[   
+    
+    {
+       "type": "subscribe",
+       "params": {
+           "topic": "BZh91AY&SY\\xc6\\x95\\x11J\\x00\\x00\\x01\\x90\\x00\\x0c\\x08\\xa0\\x00!\\x9ah3M\\x1a\\x1a/\\x17rE8P\\x90\\xc6\\x95\\x11J"
+       }     
+    },
+
+    {
+        "type": "publish",
+        "params": {
+            "topic": "BZh91AY&SY\\xc6\\x95\\x11J\\x00\\x00\\x01\\x90\\x00\\x0c\\x08\\xa0\\x00!\\x9ah3M\\x1a\\x1a/\\x17rE8P\\x90\\xc6\\x95\\x11J",
+            "message": "pacchetto #1",
+            "qos": 1,
+            "dup": false,
+            "retain": false,
+            "packetId": 1
+        }
+    }
+
+]

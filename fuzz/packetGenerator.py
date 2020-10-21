@@ -33,6 +33,35 @@ def buildSubscribe(inputpassed):
         data.append(packet)
     return data
 
+def buildPublish(count):
+    data = []
+    for i in range(1, count):
+        topic = "/test/topic"
+        qos = random.randint(0, 2)
+        packetId = i
+        packet = {
+            "type": "publish",
+            "params": {
+                "topic": topic,
+                "packetId": packetId,
+                "message": "test",
+                "qos": qos,
+                "retain": False,
+                "dup": False
+            }
+        }
+        
+        data.append(packet)
+        if qos == 2:
+            packet = {
+                "type": "pubrel",
+                "params": {
+                    "packetId": packetId,
+                }
+            }
+        data.append(packet)
+    return data
+
 @click.command()
 @click.option("-sub", default=[0, False, False], help="Pacchetti subscribe da inviare", show_default=True)
 @click.option('-pub', default=0, help="Pacchetti publish da inviare", show_default=True)
@@ -42,7 +71,7 @@ def buildSubscribe(inputpassed):
 @click.option('-r', default=False, show_default=True, help="Randomizzazione dei pacchetti")
 
 def fun(sub, pub, ping, disc, o, r):
-    outpuData = buildSubscribe(sub)
+    outpuData = buildPublish(pub)
     with open('packets_generated/' + o, mode='w') as f:
         json.dump(outpuData, f)
 

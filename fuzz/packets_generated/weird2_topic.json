@@ -1,0 +1,8 @@
+[
+    {
+        "type": "subscribe",
+        "params": {
+            "topic": "/valid/\\xff\\xfe#\\x00/"
+        }
+    }
+]

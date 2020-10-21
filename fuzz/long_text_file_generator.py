@@ -1,8 +1,8 @@
 import json
 def t():
     a = ""
-    for i in range(0, 60000):
-        a += "/"
+    for i in range(0, 4097):
+        a += "a"
 
     with open('test.txt', mode='w') as f:
         f.write(a)

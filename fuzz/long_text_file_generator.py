@@ -1,8 +1,8 @@
 import json
 def t():
     a = ""
-    for i in range(0, 0x989680):
-        a += "a"
+    for i in range(0, 60000):
+        a += "/"
 
     with open('test.txt', mode='w') as f:
         f.write(a)
@@ -50,4 +50,4 @@ def buildPacketBig():
     print("FILE PACKET CREATO")
 
 if __name__ == "__main__":
-    buildPacketBig()
+    t()

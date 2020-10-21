@@ -1,0 +1,22 @@
+[   
+    
+    {
+       "type": "subscribe",
+       "params": {
+           "topic": "x\\x9cS\\xd1W\\xd6\\xd7\\xd6W\\xd1W\\x06\\x00\\x07T\\x01v"
+       }     
+    },
+
+    {
+        "type": "publish",
+        "params": {
+            "topic": "x\\x9cS\\xd1W\\xd6\\xd7\\xd6W\\xd1W\\x06\\x00\\x07T\\x01v",
+            "message": "pacchetto #1",
+            "qos": 1,
+            "dup": false,
+            "retain": false,
+            "packetId": 1
+        }
+    }
+
+]

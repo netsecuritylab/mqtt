@@ -10,7 +10,7 @@ from mqtt.client.factory import MQTTFactory
 import pyradamsa
 import random
 
-endpoint = "tcp:localhost:1883"
+endpoint = "tcp:192.168.1.21:1883"
 logLevelFilterPredicate = LogLevelFilterPredicate(defaultLogLevel=LogLevel.debug)
 radamsa = pyradamsa.Radamsa()
 
@@ -96,7 +96,7 @@ class MQTTService(ClientService):
             a += "a"
         
 
-        d1 = self.protocol.publish(topic="/valid/\\xff\\xfe#\\x00/", qos=0, message=a)
+        d1 = self.protocol.publish(topic="test/topic", qos=0, message=a)
         d1.addErrback(_logFailure)
 
         dlist = DeferredList([d1], consumeErrors=True)

@@ -1,0 +1,32 @@
+[
+    {
+        "type": "publish",
+        "params": {
+            "topic": "shellies/ShellyBulbDuo-D0CC77/light/0/set",
+            "message": "{\"brightness\":50,\"white\":50,\"temp\":2700,\"turn\":\"off\"}",
+            "qos": 2,
+            "dup": false,
+            "retain": false,
+            "packetId": 1
+        }
+    },
+
+    {
+        "type": "publish",
+        "params": {
+            "topic": "shellies/ShellyBulbDuo-D0CC77/light/0/set",
+            "message": "{\"brightness\":50,\"white\":50,\"temp\":2700,\"turn\":\"on\"}",
+            "qos": 1,
+            "dup": false,
+            "retain": false,
+            "packetId": 1
+        }
+    },
+
+    {
+        "type": "pubrel",
+        "params": {
+            "packetId": 1
+        }
+    }
+]

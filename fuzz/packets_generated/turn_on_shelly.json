@@ -1,0 +1,13 @@
+[
+    {
+        "type": "publish",
+        "params": {
+            "topic": "shellies/ShellyBulbDuo-D0CC77/light/0/set",
+            "message": "{\"brightness\":50,\"white\":100,\"temp\":2700,\"turn\":\"off\"}",
+            "qos": 1,
+            "dup": false,
+            "retain": false,
+            "packetId": 1
+        }
+    }
+]

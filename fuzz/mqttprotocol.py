@@ -297,7 +297,7 @@ class MQTTProtocol(Protocol):
             else:
                 varHeader.extend(_encodeValue(messageId))
 
-        payload.extend(_encodeString(message.encode("utf-8")))
+        payload.extend(bytes(message, "utf-8"))
         header.extend(_encodeLength(len(varHeader) + len(payload)))
 
         self.transport.write(header)

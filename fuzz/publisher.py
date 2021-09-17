@@ -43,7 +43,7 @@ class MQTTService(ClientService):
 
 
     def startService(self):
-        log.info("Publisher MQTT inizializzato")
+        log.info("MQTT Publisher initialized")
 
         self.whenConnected().addCallback(self.connectToBroker)
         ClientService.startService(self)
@@ -62,21 +62,21 @@ class MQTTService(ClientService):
         except Exception as e:
             log.error(("Connecting to {} raised {}".format(self.endpoint, str(e))))
         else:
-            log.info("Connesso al broker {broker}", broker=self.endpoint)
+            log.info("Connected to the broker {broker}", broker=self.endpoint)
 
 
     def onDisconnection(self, reason):
-        log.debug("Disconnesso, motivazione: {r}", r=reason)
+        log.debug("Disconnected, reason: {r}", r=reason)
         self.whenConnected().addCallback(self.connectToBroker)
 
 
     def publish(self):
 
         def _logFailure(failure):
-            log.debug("errore: {f}", f=failure.getErrorMessage())
+            log.debug("Error : {f}", f=failure.getErrorMessage())
 
         def _logAll(*args):
-            log.debug("publishing completo: {args}", args=args)
+            log.debug("Publishing process complete: {args}", args=args)
 
         log.debug("Publishing")
 

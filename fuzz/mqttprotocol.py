@@ -36,7 +36,7 @@ class MQTTProtocol(Protocol):
         pass
 
     def connectionMade(self):
-        print("[PROTOCOL] CONNESSIONE EFFETTUATA")
+        print("[PROTOCOL] CONNECTION ESTABLISHED")
 
     def connectionLost(self, reason):
         pass
@@ -85,7 +85,7 @@ class MQTTProtocol(Protocol):
             packetQoS = (packet[0] & 0x06) >> 1
             retain = (packet[0] & 0x01) == 0x01
         except:
-            print("ID PACCHETTO " + str((packet[0] & 0xF0) >> 4) + " NON RICONOSCIUTO.")
+            print("PACKET TYPE ID " + str((packet[0] & 0xF0) >> 4) + " UNKNOWN.")
             return
 
         newLength = 1
@@ -97,7 +97,7 @@ class MQTTProtocol(Protocol):
         if packetHandler:
             packetHandler(packet, packetQoS, duplicate, retain)
         else:
-            print("Non posso gestire questo pacchetto")
+            print("Cannot handle this packet")
             return
 
     def connack_event(self, packet, qos, dup, retain):
@@ -203,15 +203,15 @@ class MQTTProtocol(Protocol):
         varHeader = bytearray()
         payload = bytearray()
         
-        varHeader.extend(_encodeString(b"MQTT")) # nome del protocollo
-        varHeader.append(4) # versione del protocollo
+        varHeader.extend(_encodeString(b"MQTT")) # protocol's name
+        varHeader.append(4) # protocol's version
 
         if willMessage is None or willTopic is None:
-            varHeader.append(0 << 2 | cleanStart << 1) # byte per il cleanSession
+            varHeader.append(0 << 2 | cleanStart << 1) # cleanSession
         else:
-            varHeader.append(willRetain << 5 | willQoS << 3 | 1 << 2 | cleanStart << 1) # produce i bit per i vari valori del pacchetto
+            varHeader.append(willRetain << 5 | willQoS << 3 | 1 << 2 | cleanStart << 1)
 
-        varHeader.extend(_encodeValue(keepalive//1000)) # byte per il keepalive
+        varHeader.extend(_encodeValue(keepalive//1000)) # keepalive
 
         payload.extend(_encodeString(bytes(clientId, "utf-8"))) # clientId in bytes, utf-8.
 
@@ -244,10 +244,10 @@ class MQTTProtocol(Protocol):
         varHeader = bytearray()
         payload = bytearray()
 
-        header.append(0x08 << 4 | 0x01 << 1) # 130 in decimale, 1000010 in binario (packet header subscribe richiede 1 0 0 0 0 0 1 0)
+        header.append(0x08 << 4 | 0x01 << 1) # subscribe header
 
         if messageId is None or messageId > 65535:
-            varHeader.extend(_encodeValue(random.randint(1, 65535))) # max id 65535, da provare messaggi id più grandi di 65535
+            varHeader.extend(_encodeValue(random.randint(1, 65535))) # max id 65535
         else:
             varHeader.extend(_encodeValue(messageId))
 
@@ -268,11 +268,11 @@ class MQTTProtocol(Protocol):
         header.append(0x0A << 4 | 0x01 << 1) # 1010 0010
 
         if messageId is None:
-            varHeader.extend(_encodeValue(random.randint(1, 65535))) # max id 65535, da provare messaggi id più grandi di 65535
+            varHeader.extend(_encodeValue(random.randint(1, 65535))) # max id 65535
         else:
             varHeader.extend(_encodeValue(messageId))
 
-        payload.extend(_encodeString(bytes(topic, "utf-8"))) # topic da unsubscribe
+        payload.extend(_encodeString(bytes(topic, "utf-8"))) # topic unsubscription
 
         header.extend(_encodeLength(len(varHeader) + len(payload)))
 

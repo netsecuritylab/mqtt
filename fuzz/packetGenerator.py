@@ -63,19 +63,19 @@ def buildPublish(count):
     return data
 
 @click.command()
-@click.option("-sub", default=[0, False, False], help="Pacchetti subscribe da inviare", show_default=True)
-@click.option('-pub', default=0, help="Pacchetti publish da inviare", show_default=True)
-@click.option('-ping', default=0, help="Pacchetti pingresp da inviare", show_default=True)
-@click.option('-disc', default=0, help="Pacchetti disconnect da inviare", show_default=True)
-@click.option('-o', help="Nome file json di output", required=True)
-@click.option('-r', default=False, show_default=True, help="Randomizzazione dei pacchetti")
+@click.option("-sub", default=[0, False, False], help="Subscription packets", show_default=True)
+@click.option('-pub', default=0, help="Publish packets", show_default=True)
+@click.option('-ping', default=0, help="Pingresp packet", show_default=True)
+@click.option('-disc', default=0, help="Disconnect packet", show_default=True)
+@click.option('-o', help="Output file", required=True)
+@click.option('-r', default=False, show_default=True, help="Randomization")
 
 def fun(sub, pub, ping, disc, o, r):
     outpuData = buildPublish(pub)
     with open('packets_generated/' + o, mode='w') as f:
         json.dump(outpuData, f)
 
-    print("Pacchetti generati con successo nel file packets_generated/" + o)
+    print("Packets generated successfully in packets_generated/" + o)
     return 1
 
 

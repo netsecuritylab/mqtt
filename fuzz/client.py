@@ -24,9 +24,7 @@ class MQTTClient(MQTTProtocol):
         }
 
     def connectionMade(self):
-        #print("[CLIENT] INVIO CONNECT")
         self.connect(self.clientId, self.keepalive, self.willTopic, self.willMessage, self.willQoS, self.willRetain, True)
-        #print("[CLIENT] CONNESSO AL BROKER")
         reactor.callLater(self.keepalive//1000, self.pingreq)
        
         reactor.callLater(1/100, self.processPackets)
@@ -39,11 +37,11 @@ class MQTTClient(MQTTProtocol):
         if status == 0: # 0 per "connessione accettata"
             self.processPackets()
         else:
-            print("[CLIENT] ERRORE CONNACK")
+            print("[CLIENT] CONNACK ERROR")
             pass
 
     def processPackets(self):
-        if True == True:
+        if True:
             while len(self.packets):
                 """packet = self.packets[0]
                 self.packets = self.packets[1:]"""
@@ -71,7 +69,6 @@ class MQTTClient(MQTTProtocol):
 
     def sendPublish(self, packet):
         params = packet["params"]
-        #print("PUBBLICO PACCHETTO id: " + str(params["packetId"]) + ", qos: " + str(params["qos"]))
         return self.publish(topic=params["topic"], message=params["message"], dup=params["dup"], qos=params["qos"], messageId=params["packetId"], retain=params["retain"])
 
     def sendUnsubscribe(self, packet):

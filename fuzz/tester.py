@@ -21,12 +21,12 @@ class Listener(ReconnectingClientFactory):
         return proto
 
     def clientConnectionLost(self, connector, reason):
-        print("CONNESSIONE PERSA: {}".format(reason))
+        print("CONNECTION LOST: {}".format(reason))
         self.protocol = MQTTClient
         ReconnectingClientFactory.clientConnectionLost(self, connector, reason)
 
     def clientConnectionFailed(self, connector, reason):
-        print("CONNESSIONE FALLITA: {}".format(reason))
+        print("CONNECTION FAILED: {}".format(reason))
         self.protocol = MQTTClient
 
         ReconnectingClientFactory.clientConnectionFailed(self, connector, reason)

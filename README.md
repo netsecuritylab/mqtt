@@ -20,7 +20,15 @@ For more information about virtual envs please refer to the official documentati
 
 ## Usage
 
-TODO
+| File | Description |
+|-------|-----------------|
+|  [mqttprotocol.py](./fuzz/mqttprotocol.py)    | This file contains the MQTT protocol implementation. Packets implemented: _connect, connack, publish, puback, pubrec, pubrel,, pubcomp, subscribe, suback, unsubscribe, unsuback,, pingreq, pingresp, disconnect_. |
+|  [client.py](./fuzz/client.py) |  MQTT Client implementation for testing purpose. |
+|  [publisher.py](./fuzz/publisher.py) | MQTT Publisher implementation with Twisted and radamsa (payload fuzzing test). |
+|  [tester.py](./fuzz/tester.py)      |  With this script you can run the experiments. Example: `./tester.py --host %host --port %port --packets %packets_file` |
+|  [packets.json](./fuzz/packets.json) | Example of packets that can be passed to the tester. | 
+|  packets_generated | This folder contains all the experiments, which are reported in the paper. |
+
 
 ## License
 

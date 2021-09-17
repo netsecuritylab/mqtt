@@ -39,9 +39,9 @@ class Listener(ReconnectingClientFactory):
 
 
 @click.command()
-@click.option('--host', default="localhost", help='L\'host del broker MQTT', show_default=True)
-@click.option('--port', default=1883, help="La porta del broker MQTT", show_default=True)
-@click.option('--packets', default="", help="Lista dei pacchetti da inviare", show_default=True)
+@click.option('--host', default="localhost", help='MQTT Broker address', show_default=True)
+@click.option('--port', default=1883, help="MQTT Broker port", show_default=True)
+@click.option('--packets', default="", help="List of packets to send", show_default=True)
 
 def hello(host, port, packets):
     with open(packets, mode='r') as f:

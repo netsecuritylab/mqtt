@@ -9,10 +9,12 @@ from twisted.logger import (Logger, LogLevel, globalLogBeginner, textFileLogObse
 from mqtt.client.factory import MQTTFactory
 import pyradamsa
 import random
+import click
 
-endpoint = "tcp:192.168.1.21:1883"
+
 logLevelFilterPredicate = LogLevelFilterPredicate(defaultLogLevel=LogLevel.debug)
 radamsa = pyradamsa.Radamsa()
+
 
 def startLogging(console=True, filepath=None):
     
@@ -105,8 +107,9 @@ class MQTTService(ClientService):
         return dlist
 
 
-if __name__ == "__main__":
-    import sys
+@click.command()
+@click.option("--endpoint", default="tcp:127.0.0.1:1883", help="MQTT Broker address", show_default=True)
+def start(endpoint):
     #import generate_tests
 
     #tests = generate_tests.GenerateTests("./test_case/connect/")
@@ -121,7 +124,6 @@ if __name__ == "__main__":
     factory = MQTTFactory(profile=MQTTFactory.PUBLISHER)
     myend = clientFromString(reactor, endpoint)
     services = []
-    n = 100
 
     serv = MQTTService(myend, factory, 1)
     serv.startService()
@@ -132,3 +134,6 @@ if __name__ == "__main__":
     for i in range(0, 10):
         services[i].startService()"""
     reactor.run()
+
+if __name__ == "__main__":
+    start()

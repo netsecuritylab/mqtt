@@ -27,6 +27,7 @@ For more information about virtual envs please refer to the official documentati
 |  [publisher.py](./fuzz/publisher.py) | MQTT Publisher implementation with Twisted and radamsa (payload fuzzing test). |
 |  [tester.py](./fuzz/tester.py)      |  With this script you can run the experiments. Example: `./tester.py --host %host --port %port --packets %packets_file`. By default _host_ is _localhost_, _port_ is _1883_, _packets_file_ represents a path to a _json_ file and it has not a default value. |
 |  [packets.json](./fuzz/packets.json) | Example of packets that can be passed to the tester. | 
+|  [utils.py](./fuzz/utils.py)  | This file contains some _utils_ to encode/decode packets. |
 |  packets_generated | This folder contains all the experiments, which are reported in the paper. |
 
 

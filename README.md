@@ -1,6 +1,6 @@
 # MQTT fuzzer
 
-This is the source code for the MQTT fuzzer that we used in our paper *Di Paolo, E., Bassetti, E., & Spognardi, A. (2021). Security assessment of common open source MQTT brokers and clients.*
+This is the source code for the MQTT fuzzer that we used in our paper [*Di Paolo, E., Bassetti, E., & Spognardi, A. (2021). Security assessment of common open source MQTT brokers and clients. @ ITASEC21: Italian Conference on Cybersecurity, April 07–09, 2021, Online*](http://ceur-ws.org/Vol-2940/paper40.pdf)
 
 ## Requirements
 
@@ -35,4 +35,4 @@ For more information about virtual envs please refer to the official documentati
 
 This code is licensed under GPLv3. See [LICENSE](LICENSE) for more information.
 
-If you use this code in your research you can cite our paper: *Di Paolo, E., Bassetti, E., & Spognardi, A. (2021). Security assessment of common open source MQTT brokers and clients.*
+If you use this code in your research please cite our paper: [*Di Paolo, E., Bassetti, E., & Spognardi, A. (2021). Security assessment of common open source MQTT brokers and clients. @ ITASEC21: Italian Conference on Cybersecurity, April 07–09, 2021, Online*](http://ceur-ws.org/Vol-2940/paper40.pdf)
